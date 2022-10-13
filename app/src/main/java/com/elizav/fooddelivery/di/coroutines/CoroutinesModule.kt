@@ -1,8 +1,8 @@
 package com.elizav.fooddelivery.di.coroutines
 
-import com.elizav.fooddelivery.di.coroutines.qualifiers.DefaultDispatcher
-import com.elizav.fooddelivery.di.coroutines.qualifiers.IoDispatcher
-import com.elizav.fooddelivery.di.coroutines.qualifiers.MainDispatcher
+import com.elizav.fooddelivery.di.qualifiers.DefaultDispatcher
+import com.elizav.fooddelivery.di.qualifiers.IoDispatcher
+import com.elizav.fooddelivery.di.qualifiers.MainDispatcher
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

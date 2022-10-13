@@ -12,7 +12,6 @@ import javax.inject.Singleton
 @InstallIn(ViewModelComponent::class)
 abstract class InteractorsBindsModule {
     @Binds
-    @Singleton
     abstract fun bindMealsInteractor(
         mealsInteractorImpl: MealsInteractorImpl
     ): MealsInteractor

@@ -2,10 +2,8 @@ package com.elizav.fooddelivery.data
 
 import com.elizav.fooddelivery.data.api.MealsApi
 import com.elizav.fooddelivery.data.mappers.MealMapper.toDomain
-import com.elizav.fooddelivery.di.coroutines.qualifiers.IoDispatcher
+import com.elizav.fooddelivery.di.qualifiers.IoDispatcher
 import com.elizav.fooddelivery.domain.MealsRepository
-import com.elizav.fooddelivery.domain.model.Area
-import com.elizav.fooddelivery.domain.model.Category
 import com.elizav.fooddelivery.domain.model.Meal
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
@@ -16,33 +14,12 @@ class MealsRepositoryImpl @Inject constructor(
     @IoDispatcher private val coroutineDispatcher: CoroutineDispatcher,
 ) : MealsRepository {
 
-    override suspend fun getMealById(id: String): Result<Meal> =
+    override suspend fun getMealsForQuery(from: Int, size: Int, query: String): Result<List<Meal>> =
         withContext(coroutineDispatcher) {
             try {
-                val response = api.getMealById(id)
-                response.body()?.firstOrNull()?.let { Result.success(it.toDomain()) }
-                    ?: Result.failure(Error(response.message()))
-            } catch (ex: Exception) {
-                Result.failure(Error(ex.message))
-            }
-        }
-
-    override suspend fun getMealsForArea(area: Area): Result<List<Meal>> =
-        withContext(coroutineDispatcher) {
-            try {
-                val response = api.getMealsForArea(area)
-                response.body()?.let { Result.success(it.map { meal -> meal.toDomain() }) }
-                    ?: Result.failure(Error(response.message()))
-            } catch (ex: Exception) {
-                Result.failure(Error(ex.message))
-            }
-        }
-
-    override suspend fun getMealsForCategory(category: Category): Result<List<Meal>> =
-        withContext(coroutineDispatcher) {
-            try {
-                val response = api.getMealsForCategory(category)
-                response.body()?.let { Result.success(it.map { meal -> meal.toDomain() }) }
+                val response = api.getMeals(from = from, size = size, query = query)
+                response.body()?.meals?.map { it.toDomain() }
+                    ?.let { Result.success(it) }
                     ?: Result.failure(Error(response.message()))
             } catch (ex: Exception) {
                 Result.failure(Error(ex.message))

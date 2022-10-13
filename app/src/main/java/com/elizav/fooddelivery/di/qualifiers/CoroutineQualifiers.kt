@@ -1,4 +1,4 @@
-package com.elizav.fooddelivery.di.coroutines.qualifiers
+package com.elizav.fooddelivery.di.qualifiers
 
 import javax.inject.Qualifier
 

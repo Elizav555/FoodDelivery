@@ -2,6 +2,8 @@ package com.elizav.fooddelivery.di
 
 import com.elizav.fooddelivery.BuildConfig
 import com.elizav.fooddelivery.data.api.MealsApi
+import com.elizav.fooddelivery.di.qualifiers.ApiInterceptor
+import com.elizav.fooddelivery.di.qualifiers.HostInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,16 +27,27 @@ class NetworkModule {
 
     @Provides
     @Singleton
+    @ApiInterceptor
     fun provideApiKeyInterceptor() = Interceptor { chain ->
         val original = chain.request()
-        val newURL = original.url.newBuilder()
-            .addQueryParameter(QUERY_API_KEY, API_KEY)
+        val newRequest = original.newBuilder()
+            .addHeader(API_KEY_HEADER, API_KEY)
             .build()
-
         chain.proceed(
-            original.newBuilder()
-                .url(newURL)
-                .build()
+            newRequest
+        )
+    }
+
+    @Provides
+    @Singleton
+    @HostInterceptor
+    fun provideHostInterceptor() = Interceptor { chain ->
+        val original = chain.request()
+        val newRequest = original.newBuilder()
+            .addHeader(HOST_HEADER, HOST)
+            .build()
+        chain.proceed(
+            newRequest
         )
     }
 
@@ -45,14 +58,13 @@ class NetworkModule {
     @Provides
     @Singleton
     fun provideClient(
-        apiKeyInterceptor: Interceptor
+        @ApiInterceptor apiKeyInterceptor: Interceptor,
+        @HostInterceptor hostInterceptor: Interceptor,
+        httpLoggingInterceptor: HttpLoggingInterceptor
     ) = OkHttpClient.Builder()
         .addInterceptor(apiKeyInterceptor)
-        .also {
-            it.addInterceptor(
-                HttpLoggingInterceptor()
-            )
-        }
+        .addInterceptor(hostInterceptor)
+        .addInterceptor(httpLoggingInterceptor)
         .cache(null)
         .build()
 
@@ -73,8 +85,10 @@ class NetworkModule {
         .build()
 
     companion object {
-        private const val BASE_URL = "http://www.themealdb.com/"
+        private const val BASE_URL = "https://tasty.p.rapidapi.com/"
         private const val API_KEY = BuildConfig.API_KEY
-        private const val QUERY_API_KEY = ""
+        private const val API_KEY_HEADER = "X-RapidAPI-Key"
+        private const val HOST = "tasty.p.rapidapi.com"
+        private const val HOST_HEADER = "X-RapidAPI-Host"
     }
 }
