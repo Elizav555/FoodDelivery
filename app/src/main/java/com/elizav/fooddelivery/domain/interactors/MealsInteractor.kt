@@ -1,10 +1,10 @@
-package com.elizav.fooddelivery.domain
+package com.elizav.fooddelivery.domain.interactors
 
-import com.elizav.fooddelivery.domain.model.Meal
 import com.elizav.fooddelivery.domain.model.Area
 import com.elizav.fooddelivery.domain.model.Category
+import com.elizav.fooddelivery.domain.model.Meal
 
-interface MealsRepository {
+interface MealsInteractor {
     suspend fun getMealById(
         id: String,
     ): Result<Meal>

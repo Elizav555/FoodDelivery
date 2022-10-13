@@ -1,5 +1,6 @@
 package com.elizav.fooddelivery.di
-import androidx.viewbinding.BuildConfig
+
+import com.elizav.fooddelivery.BuildConfig
 import com.elizav.fooddelivery.data.api.MealsApi
 import dagger.Module
 import dagger.Provides
@@ -73,7 +74,7 @@ class NetworkModule {
 
     companion object {
         private const val BASE_URL = "http://www.themealdb.com/"
-        private const val API_KEY = "1"
+        private const val API_KEY = BuildConfig.API_KEY
         private const val QUERY_API_KEY = ""
     }
 }
