@@ -7,16 +7,22 @@ import com.elizav.fooddelivery.domain.model.Meal as MealDomain
 
 object MealMapper {
     fun Meal.toDomain() = MealDomain(
-        id = idMeal,
-        name = strMeal,
-        thumbLink = strMealThumb,
-        description = description,
-        ingredients = mapIngredients(sections)
+        id = id,
+        name = name ?: "",
+        thumbLink = thumbnail_url ?: "",
+        description = description ?: "",
+        ingredients = sections?.let { mapIngredients(it) } ?: emptyList()
     )
 
     private fun mapIngredients(sections: List<Section>): List<String> {
         val allComponents = mutableListOf<Component>()
-        sections.forEach { allComponents.addAll(it.components) }
-        return allComponents.map { it.ingredient.name }
+        sections.forEach { section ->
+            section.components?.let { components ->
+                allComponents.addAll(
+                    components
+                )
+            }
+        }
+        return allComponents.mapNotNull { it.ingredient?.name }
     }
 }

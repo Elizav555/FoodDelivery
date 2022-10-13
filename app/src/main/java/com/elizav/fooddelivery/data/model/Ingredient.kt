@@ -1,8 +1,9 @@
 package com.elizav.fooddelivery.data.model
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class Ingredient(
-    val name: String,
+    @SerialName("name")val name: String?="",
 )

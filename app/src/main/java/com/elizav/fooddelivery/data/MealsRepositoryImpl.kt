@@ -18,9 +18,9 @@ class MealsRepositoryImpl @Inject constructor(
         withContext(coroutineDispatcher) {
             try {
                 val response = api.getMeals(from = from, size = size, query = query)
-                response.body()?.meals?.map { it.toDomain() }
+                response.body()?.results?.map { it.toDomain() }
                     ?.let { Result.success(it) }
-                    ?: Result.failure(Error(response.message()))
+                    ?: Result.failure(Error("LoadingError"))
             } catch (ex: Exception) {
                 Result.failure(Error(ex.message))
             }
