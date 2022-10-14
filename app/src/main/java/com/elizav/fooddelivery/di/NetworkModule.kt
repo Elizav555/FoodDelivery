@@ -4,20 +4,18 @@ import android.content.Context
 import com.elizav.fooddelivery.BuildConfig
 import com.elizav.fooddelivery.data.api.MealsApi
 import com.elizav.fooddelivery.di.qualifiers.ApiInterceptor
-import com.elizav.fooddelivery.di.qualifiers.CacheInterceptor
 import com.elizav.fooddelivery.di.qualifiers.HostInterceptor
-import com.elizav.fooddelivery.di.qualifiers.InternetInterceptor
+import com.elizav.fooddelivery.di.qualifiers.OfflineInterceptor
+import com.elizav.fooddelivery.di.qualifiers.OnlineInterceptor
 import com.elizav.fooddelivery.ui.utils.InternetConnectionControl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import java.io.File
-import java.util.Locale
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 import okhttp3.Cache
-import okhttp3.CacheControl
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -63,83 +61,49 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    @CacheInterceptor
-    fun provideCacheInterceptor() =
-        Interceptor { chain ->
-            val originalResponse = chain.proceed(chain.request())
-            val maxAge: Int = originalResponse.cacheControl.maxAgeSeconds
-            if (maxAge <= 0) {
-                originalResponse.newBuilder()
-                    .removeHeader("Pragma")
-                    .removeHeader("Expires")
-                    .removeHeader("Cache-Control")
-                    .header(
-                        "Cache-Control",
-                        String.format(
-                            Locale.ENGLISH,
-                            "max-age=%d, only-if-cached, max-stale=%d",
-                            CACHE_DURATION_SEC,
-                            0
-                        )
-                    )
-                    .build()
-            } else {
-                originalResponse
-            }
-        }
+    fun provideConvertFactory(): GsonConverterFactory = GsonConverterFactory.create()
 
-    @InternetInterceptor
     @Provides
-    fun provideInternetInterceptor(
-        internetConnectionControl: InternetConnectionControl
-    ) = Interceptor { chain ->
-        var request = chain.request()
-        if (request.cacheControl.noCache) {
-            return@Interceptor chain.proceed(request)
-        }
-        request =
-            if (internetConnectionControl.isNetworkConnected() && internetConnectionControl.isInternetAvailable()) {
-                request.newBuilder()
-                    .cacheControl(
-                        CacheControl.Builder().maxStale(CACHE_DURATION_MIN, TimeUnit.MINUTES)
-                            .build()
-                    )
-                    .build()
-            } else {
-                // for offline
-                request.newBuilder()
-                    .cacheControl(
-                        CacheControl.Builder().onlyIfCached()
-                            .maxStale(
-                                STALE_DURATION_DAYS,
-                                TimeUnit.DAYS
-                            )
-                            .build()
-                    )
-                    .build()
-            }
-        chain.proceed(request)
+    @OnlineInterceptor
+    fun provideOnlineInterceptor() = Interceptor { chain ->
+        val response = chain.proceed(chain.request())
+        val maxAge = 60
+        response.newBuilder()
+            .header("Cache-Control", "public, max-age=$maxAge")
+            .removeHeader("Pragma")
+            .build()
     }
 
     @Provides
-    @Singleton
-    fun provideConvertFactory(): GsonConverterFactory = GsonConverterFactory.create()
+    @OfflineInterceptor
+    fun provideOfflineInterceptor(internetConnectionControl: InternetConnectionControl) =
+        Interceptor { chain ->
+            var request = chain.request()
+            if (!(internetConnectionControl.isNetworkConnected() && internetConnectionControl.isInternetAvailable())) {
+                val maxStale = 60 * 60 * 24 * 30
+                request = request.newBuilder()
+                    .header("Cache-Control", "public, only-if-cached, max-stale=$maxStale")
+                    .removeHeader("Pragma")
+                    .build()
+            }
+            chain.proceed(request)
+        }
 
     @Provides
     @Singleton
     fun provideClient(
         @ApiInterceptor apiKeyInterceptor: Interceptor,
         @HostInterceptor hostInterceptor: Interceptor,
-        @InternetInterceptor internetInterceptor: Interceptor,
-        @CacheInterceptor cacheInterceptor: Interceptor,
+        @OnlineInterceptor onlineInterceptor: Interceptor,
+        @OfflineInterceptor offlineInterceptor: Interceptor,
         httpLoggingInterceptor: HttpLoggingInterceptor,
         cache: Cache
     ) = OkHttpClient.Builder()
+        .addInterceptor(offlineInterceptor)
+        .addNetworkInterceptor(onlineInterceptor)
         .addInterceptor(apiKeyInterceptor)
         .addInterceptor(hostInterceptor)
         .addInterceptor(httpLoggingInterceptor)
-        .addInterceptor(internetInterceptor)
-        .addNetworkInterceptor(cacheInterceptor)
         .connectTimeout(TIMEOUT.toLong(), TimeUnit.SECONDS)
         .cache(cache)
         .build()
@@ -176,11 +140,6 @@ class NetworkModule {
         private const val API_KEY_HEADER = "X-RapidAPI-Key"
         private const val HOST = "tasty.p.rapidapi.com"
         private const val HOST_HEADER = "X-RapidAPI-Host"
-
-
         private const val TIMEOUT = 10
-        private const val CACHE_DURATION_MIN = 10
-        private const val CACHE_DURATION_SEC: Long = 600
-        private const val STALE_DURATION_DAYS = 7
     }
 }

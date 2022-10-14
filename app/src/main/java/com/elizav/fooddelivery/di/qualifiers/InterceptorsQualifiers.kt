@@ -13,8 +13,8 @@ annotation class HostInterceptor
 
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)
-annotation class CacheInterceptor
+annotation class OfflineInterceptor
 
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)
-annotation class InternetInterceptor
+annotation class OnlineInterceptor
