@@ -1,4 +1,4 @@
-package com.elizav.fooddelivery.ui.menu.list
+package com.elizav.fooddelivery.ui.menu.list.meal
 
 import androidx.recyclerview.widget.DiffUtil
 import com.elizav.fooddelivery.domain.model.Meal

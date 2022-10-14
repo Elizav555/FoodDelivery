@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.elizav.fooddelivery.databinding.FragmentMenuBinding
-import com.elizav.fooddelivery.ui.main.list.PromoAdapter
+import com.elizav.fooddelivery.ui.menu.list.promo.PromoAdapter
 import com.elizav.fooddelivery.ui.menu.viewPager.MenuListsAdapter
 import com.elizav.fooddelivery.ui.menu.viewPager.Queries.queries
 import com.google.android.material.tabs.TabLayoutMediator

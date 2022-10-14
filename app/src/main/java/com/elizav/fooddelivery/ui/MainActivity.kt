@@ -3,13 +3,9 @@ package com.elizav.fooddelivery.ui
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.elizav.fooddelivery.R
 import com.elizav.fooddelivery.databinding.ActivityMainBinding
-import com.elizav.fooddelivery.ui.main.list.PromoAdapter
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 

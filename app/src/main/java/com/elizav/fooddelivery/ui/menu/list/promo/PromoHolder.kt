@@ -1,4 +1,4 @@
-package com.elizav.fooddelivery.ui.main.list
+package com.elizav.fooddelivery.ui.menu.list.promo
 
 import androidx.recyclerview.widget.RecyclerView
 import com.elizav.fooddelivery.databinding.ItemPromoBinding

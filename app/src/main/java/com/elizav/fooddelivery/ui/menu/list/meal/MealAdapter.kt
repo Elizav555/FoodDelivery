@@ -1,12 +1,14 @@
-package com.elizav.fooddelivery.ui.menu.list
+package com.elizav.fooddelivery.ui.menu.list.meal
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
+import coil.ImageLoader
 import com.elizav.fooddelivery.databinding.ItemMealBinding
 import com.elizav.fooddelivery.domain.model.Meal
 
 class MealAdapter(
+    private val imageLoader: ImageLoader
 ) : ListAdapter<Meal, MealHolder>(MealDiffUtilCallback()) {
 
     override fun onCreateViewHolder(
@@ -18,6 +20,7 @@ class MealAdapter(
             parent,
             false
         ),
+        imageLoader = imageLoader
     )
 
     override fun onBindViewHolder(

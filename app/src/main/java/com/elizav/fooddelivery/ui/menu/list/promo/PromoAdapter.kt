@@ -1,4 +1,4 @@
-package com.elizav.fooddelivery.ui.main.list
+package com.elizav.fooddelivery.ui.menu.list.promo
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

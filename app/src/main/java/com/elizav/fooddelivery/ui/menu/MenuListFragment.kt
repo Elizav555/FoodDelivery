@@ -8,12 +8,14 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import coil.ImageLoader
 import com.elizav.fooddelivery.databinding.FragmentMenuListBinding
 import com.elizav.fooddelivery.domain.model.Meal
-import com.elizav.fooddelivery.ui.menu.list.MealAdapter
+import com.elizav.fooddelivery.ui.menu.list.meal.MealAdapter
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MenuListFragment(val query: String) : Fragment() {
@@ -22,6 +24,9 @@ class MenuListFragment(val query: String) : Fragment() {
 
     private val menuViewModel: MenuViewModel by viewModels()
     lateinit var mealsAdapter: MealAdapter
+
+    @Inject
+    lateinit var imageLoader: ImageLoader
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,7 +51,7 @@ class MenuListFragment(val query: String) : Fragment() {
     }
 
     private fun initAdapter() {
-        mealsAdapter = MealAdapter()
+        mealsAdapter = MealAdapter(imageLoader)
         with(binding.recyclerMeals) {
             adapter = mealsAdapter
             layoutManager = LinearLayoutManager(requireContext())

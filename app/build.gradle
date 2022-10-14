@@ -44,7 +44,7 @@ android {
 }
 
 dependencies {
-    implementation "io.coil-kt:coil:2.2.2"
+    implementation "io.coil-kt:coil-base:2.2.2"
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0"
     //region Hilt
     def hilt = "2.42"
