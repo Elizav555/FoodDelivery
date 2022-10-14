@@ -2,8 +2,13 @@ package com.elizav.fooddelivery.ui.menu
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -12,6 +17,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.elizav.fooddelivery.R
 import com.elizav.fooddelivery.databinding.FragmentMenuBinding
 import com.elizav.fooddelivery.domain.model.Meal
 import com.elizav.fooddelivery.ui.main.list.PromoAdapter
@@ -41,10 +47,6 @@ class MenuFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val navController = findNavController()
-        val appBarConfiguration = AppBarConfiguration(navController.graph)
-        binding.toolbar
-            .setupWithNavController(navController, appBarConfiguration)
 
         initPromoAdapter()
         initAdapter()

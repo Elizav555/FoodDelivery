@@ -5,4 +5,5 @@
     <string name="menu">Меню</string>
     <string name="price_mock">от 345 р</string>
     <string name="empty_list">Упс, список пуст</string>
+    <string name="moscow">Москва</string>
 </resources>

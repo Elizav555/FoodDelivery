@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/navigation_menu"
         android:name="com.elizav.fooddelivery.ui.menu.MenuFragment"
-        android:label="@string/menu"
+        android:label="@string/moscow"
         tools:layout="@layout/fragment_menu" />
 
     <fragment
