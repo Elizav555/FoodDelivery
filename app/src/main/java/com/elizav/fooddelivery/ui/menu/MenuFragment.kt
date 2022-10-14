@@ -7,9 +7,14 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.elizav.fooddelivery.databinding.FragmentMenuBinding
 import com.elizav.fooddelivery.domain.model.Meal
+import com.elizav.fooddelivery.ui.main.list.PromoAdapter
 import com.elizav.fooddelivery.ui.menu.list.MealAdapter
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.google.android.material.snackbar.Snackbar
@@ -19,6 +24,8 @@ import dagger.hilt.android.AndroidEntryPoint
 class MenuFragment : Fragment() {
     private var _binding: FragmentMenuBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var promoAdapter: PromoAdapter
 
     private val menuViewModel: MenuViewModel by viewModels()
     lateinit var mealsAdapter: MealAdapter
@@ -34,6 +41,12 @@ class MenuFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val navController = findNavController()
+        val appBarConfiguration = AppBarConfiguration(navController.graph)
+        binding.toolbar
+            .setupWithNavController(navController, appBarConfiguration)
+
+        initPromoAdapter()
         initAdapter()
         initObservers()
     }
@@ -41,6 +54,15 @@ class MenuFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun initPromoAdapter() {
+        promoAdapter = PromoAdapter()
+        with(binding.rvPromo) {
+            adapter = promoAdapter
+            layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
+            setHasFixedSize(true)
+        }
     }
 
     private fun initAdapter() {
