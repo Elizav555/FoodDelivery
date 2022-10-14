@@ -9,4 +9,17 @@
     <style name="ShapeAppearanceOverlay.App.CornerSize50Percent" parent="">
         <item name="cornerSize">50%</item>
     </style>
+    <style name="MyOutlinedButton" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="strokeColor">@color/primary</item>
+    </style>
+    <style name="BottomNavigationStyle">
+        <item name="itemActiveIndicatorStyle">@style/App.Custom.Indicator</item>
+        <item name="itemBackground">@color/bottom_background</item>
+        <item name="itemIconTint">@drawable/nav_color_state</item>
+        <item name="itemTextColor">@drawable/nav_color_state</item>
+    </style>
+
+    <style name="App.Custom.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/bottom_background</item>
+    </style>
 </resources>

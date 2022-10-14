@@ -17,20 +17,12 @@ class MenuViewModel @Inject constructor(
     private var _meals: MutableLiveData<Result<List<Meal>>> = MutableLiveData()
     val meals: LiveData<Result<List<Meal>>> = _meals
 
-    init {
-        getMeals()
-    }
-
-    fun getMeals() = viewModelScope.launch {
-        mealsInteractor.getMealsForQuery(query = QUERY_PIZZA).fold(
+    fun getMeals(query: String) = viewModelScope.launch {
+        mealsInteractor.getMealsForQuery(query = query).fold(
             onSuccess = { meals ->
                 _meals.value = Result.success(meals)
             },
             onFailure = { _meals.value = Result.failure(it) }
         )
-    }
-
-    companion object {
-        const val QUERY_PIZZA = "pizza"
     }
 }
